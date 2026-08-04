@@ -39,4 +39,4 @@ The development process, while resulting in a simple design, was highly benefici
 ---
 
 ## Project Files & Links
-* Download STL File: [Click Here to Download STL File](./Blocky_Robotic_Dog (1).stl)
+* Download STL File: [Click Here to Download STL File](./robot.dog.stl)
