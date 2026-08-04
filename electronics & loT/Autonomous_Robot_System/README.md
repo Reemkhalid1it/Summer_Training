@@ -8,7 +8,7 @@ This repository contains the complete simulation for a 4-wheel drive (4WD) robot
 ## System Preview
 
 ### Circuit Diagram
-![Circuit Diagram](circuit.png)
+![Circuit Diagram](t725.png)
 
 
 
@@ -79,118 +79,217 @@ During the simulation setup on Tinkercad, several wiring issues were identified 
 ```cpp
 #include <Servo.h>
 
-// Pin Definitions
-const int IN1 = 5;
-const int IN2 = 6;
-const int IN3 = 9;
-const int IN4 = 10;
-const int SERVO_PIN = 11;
-const int TRIG_PIN = 12;
-const int ECHO_PIN = 13;
+//--------------- L293D -----------------
+const int ENA = 5;
+const int IN1 = 2;
+const int IN2 = 3;
 
-Servo myServo;
+const int ENB = 6;
+const int IN3 = 4;
+const int IN4 = 7;
 
-void setup() {
-  // Set motor driver pins as outputs
-  pinMode(IN1, OUTPUT);
-  pinMode(IN2, OUTPUT);
-  pinMode(IN3, OUTPUT);
-  pinMode(IN4, OUTPUT);
-  
-  // Set ultrasonic sensor pins
-  pinMode(TRIG_PIN, OUTPUT);
-  pinMode(ECHO_PIN, INPUT);
-  
-  // Attach servo motor and set default position to center (90 degrees)
-  myServo.attach(SERVO_PIN);
-  myServo.write(90);
-}
+//------------- Ultrasonic --------------
+const int trigPin = 10;
+const int echoPin = 11;
 
-// Function to calculate clearance distance using the HC-SR04 sensor
-long getDistance() {
-  digitalWrite(TRIG_PIN, LOW);
+//--------------- Servo -----------------
+Servo servoMotor;
+const int servoPin = 9;
+
+//---------------------------------------
+
+float getDistance() {
+
+  digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
-  digitalWrite(TRIG_PIN, HIGH);
+
+  digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
-  digitalWrite(TRIG_PIN, LOW);
-  
-  long duration = pulseIn(ECHO_PIN, HIGH);
-  long distance = duration * 0.034 / 2; // Convert pulse time to centimeters
+
+  digitalWrite(trigPin, LOW);
+
+  long duration = pulseIn(echoPin, HIGH);
+
+  float distance = duration * 0.0343 / 2;
+
   return distance;
 }
 
-// Motor Control Functions
+//---------------------------------------
+
 void stopMotors() {
+
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, LOW);
+
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, LOW);
 }
 
-void moveForward() {
+//---------------------------------------
+
+void forward() {
+
   digitalWrite(IN1, HIGH);
   digitalWrite(IN2, LOW);
+
   digitalWrite(IN3, HIGH);
   digitalWrite(IN4, LOW);
 }
 
-void moveBackward() {
+//---------------------------------------
+
+void backward() {
+
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
+
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, HIGH);
 }
 
-void turnLeft() {
+//---------------------------------------
+
+void rightTurn() {
+
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+}
+
+//---------------------------------------
+
+void leftTurn() {
+
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
+
   digitalWrite(IN3, HIGH);
   digitalWrite(IN4, LOW);
 }
 
-void turnRight() {
-  digitalWrite(IN1, HIGH);
-  digitalWrite(IN2, LOW);
-  digitalWrite(IN3, LOW);
-  digitalWrite(IN4, HIGH);
+//---------------------------------------
+
+void avoidObstacle() {
+
+  stopMotors();
+  delay(300);
+
+  servoMotor.write(30);
+  delay(700);
+
+  servoMotor.write(150);
+  delay(700);
+
+  servoMotor.write(90);
+  delay(500);
+
+  backward();
+  delay(1500);
+
+  rightTurn();
+  delay(1500);
+
+  stopMotors();
 }
 
-// Obstacle detection and avoidance routine
-void checkObstacle() {
-  // If an obstacle is detected within 10 cm or closer
-  if (getDistance() <= 10) {
-    stopMotors();          // Immediately stop all motors
-    myServo.write(0);      // Scan right side
-    delay(500);
-    myServo.write(180);    // Scan left side
-    delay(500);
-    myServo.write(90);     // Reset servo back to center
-  }
+//---------------------------------------
+
+bool obstacleDetected() {
+
+  float distance = getDistance();
+
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  if (distance <= 10 && distance > 0)
+    return true;
+
+  return false;
 }
+
+//---------------------------------------
+
+void setup() {
+
+  pinMode(ENA, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+
+  pinMode(ENB, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  analogWrite(ENA, 255);
+  analogWrite(ENB, 255);
+
+  servoMotor.attach(servoPin);
+  servoMotor.write(90);
+
+  Serial.begin(9600);
+}
+
+//---------------------------------------
 
 void loop() {
-  // Phase 1: Move forward for 30 seconds
-  moveForward();
+
+  // للأمام 30 ثانية
+  forward();
+
   for (int i = 0; i < 300; i++) {
-    checkObstacle();
+
+    if (obstacleDetected()) {
+      avoidObstacle();
+      return;
+    }
+
     delay(100);
   }
-  
-  // Phase 2: Reverse/Move backward for 60 seconds (1 minute)
-  moveBackward();
+
+  // للخلف 60 ثانية
+  backward();
+
   for (int i = 0; i < 600; i++) {
-    checkObstacle();
+
+    if (obstacleDetected()) {
+      avoidObstacle();
+      return;
+    }
+
     delay(100);
   }
-  
-  // Phase 3: Alternating turns (Left & Right) for 60 seconds (1 minute)
-  for (int i = 0; i < 30; i++) {
-    turnLeft();
-    checkObstacle();
-    delay(1000);
-    
-    turnRight();
-    checkObstacle();
-    delay(1000);
+
+  // يمين ويسار لمدة دقيقة
+  for (int i = 0; i < 10; i++) {
+
+    rightTurn();
+
+    for (int j = 0; j < 30; j++) {
+
+      if (obstacleDetected()) {
+        avoidObstacle();
+        return;
+      }
+
+      delay(100);
+    }
+
+    leftTurn();
+
+    for (int j = 0; j < 30; j++) {
+
+      if (obstacleDetected()) {
+        avoidObstacle();
+        return;
+      }
+
+      delay(100);
+    }
   }
-}<img width="1008" height="765" alt="Circuit png" src="https://github.com/user-attachments/assets/fc01e467-b390-4177-9818-0e5d303316de" />
+}
