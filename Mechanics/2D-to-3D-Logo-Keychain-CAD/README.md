@@ -38,4 +38,4 @@ This repository documents the design and fabrication of a custom Harry Potter HP
 
 ## Files & Project Links
 * Download STL File: [Click Here to Download STL File](./Harry_Potter_Keychain.stl)
-* Onshape CAD Project: [[Insert your Onshape Public Link Here](https://cad.onshape.com/documents/b0d10325158373ebfe7bfd1f/w/52b99328eb66004e8dc81475/e/c7ca2b4622e21ca8cb200b0c?renderMode=0&uiState=6a716c42f920c2919cb2ddca)]
+* Onshape CAD Project: [https://cad.onshape.com/documents/b0d10325158373ebfe7bfd1f/w/52b99328eb66004e8dc81475/e/c7ca2b4622e21ca8cb200b0c?renderMode=0&uiState=6a716c42f920c2919cb2ddca]
