@@ -37,5 +37,5 @@ This repository documents the design and fabrication of a custom Harry Potter HP
 ---
 
 ## Files & Project Links
-* Download STL File: [Click Here to Download STL File](./Harry_Potter_Keychain.stl)
+* Download STL File: [Click Here to Download STL File](./HP.Keychain.stl)
 
