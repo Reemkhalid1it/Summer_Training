@@ -4,7 +4,7 @@ A Python script that uses ROS2 and `turtlesim` to draw a heart shape by publishi
 
 ## Result
 
-![Turtlesim heart result](turtlesim_heart_result.jpg)
+![Turtlesim heart result](turtlesimheart.jpg)
 
 *Illustration of the path drawn by the turtle: a diagonal line, two rounded lobes, and a diagonal line back to the starting point, forming a heart shape.*
 
