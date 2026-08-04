@@ -1,10 +1,10 @@
-# ⚡ Smart Methods Training Hub
+# Smart Methods Training Hub
 
 Welcome to my central repository for the Smart Methods training program. This space serves as an interactive showcase of my hands-on experience, technical tasks, and engineering solutions across various specialization tracks.
 
 ---
 
-## 🙋‍♀️ About The Intern
+## About The Intern
 
 * Name: Reem Alqarni
 * Specialization: Information Technology
@@ -27,4 +27,4 @@ Here is an organized overview of the internship tracks:
 
 ## 🔗 Quick Links
 
-* 💻 GitHub Profile: [@Reemkhalid1it](https://github.com/Reemkhalid1it)
+* GitHub Profile: [@Reemkhalid1it](https://github.com/Reemkhalid1it)
