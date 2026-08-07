@@ -1,8 +1,8 @@
-# Task 4 — Installing Ubuntu Linux & Setting Up ROS 2
+# Installing Ubuntu Linux & Setting Up ROS 2
 
-## About This Task
+## About This 
 
-This task was part of the **Smart Methods** training program. The goal was simple on paper: install Ubuntu Linux, set up ROS 2, and get a Python node running through `rclpy`. In practice, it turned into a real lesson in how much small details matter when you're working in a Linux terminal for the first time.
+Steps to install Ubuntu Linux, set up ROS 2, and get a Python node running through `rclpy`. In practice, it turned into a real lesson in how much small details matter when you're working in a Linux terminal for the first time.
 
 Below is a walkthrough of how I approached it, the environment I ended up with, and the problems I ran into along the way — documented honestly so it might save someone else the same headache.
 
