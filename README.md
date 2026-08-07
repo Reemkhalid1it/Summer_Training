@@ -1,6 +1,6 @@
 # Smart Methods Training Hub
 
-Welcome to my central repository for the Smart Methods training program. This space serves as an interactive showcase of my hands-on experience, technical tasks, and engineering solutions across various specialization tracks.
+This is my central repository for the Smart Methods training program. This space serves as an interactive showcase of my hands-on experience, technical tasks, and engineering solutions across various specialization tracks.
 
 ---
 
