@@ -20,8 +20,8 @@ Here is an organized overview of the internship tracks:
 | :--- | :--- |
 | ⚙️ [**Mechanics**](./Mechanics/) | 3D Modeling, CAD & Rapid Prototyping |
 | 🤖 [**AI&ROS**](.AI&ROS/) | Robotics Operating System & AI Applications |
-| ⚡ [**Electronics & IoT**](./ElectronicsElectricalPowerAndIoT/) | Circuit Design, Power & Smart Systems |
-| 🌐 [**Web & App Dev**](./WebAndApplicationProgramming/) | Web Systems & Application Engineering |
+| ⚡ [**Electronics & loT**](./electronics & loT/) | Circuit Design, Power & Smart Systems |
+| 🌐 [**Web & App Dev**](./Web&Application-programs/) | Web Systems & Application Engineering |
 
 ---
 
