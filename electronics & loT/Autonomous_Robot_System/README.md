@@ -239,7 +239,7 @@ void setup() {
 
 void loop() {
 
-  // للأمام 30 ثانية
+  // Move forward for 30 seconds.
   forward();
 
   for (int i = 0; i < 300; i++) {
@@ -252,7 +252,7 @@ void loop() {
     delay(100);
   }
 
-  // للخلف 60 ثانية
+  // Move backward for 60 seconds.
   backward();
 
   for (int i = 0; i < 600; i++) {
@@ -265,7 +265,7 @@ void loop() {
     delay(100);
   }
 
-  // يمين ويسار لمدة دقيقة
+  // Right and left – 1 minute
   for (int i = 0; i < 10; i++) {
 
     rightTurn();
