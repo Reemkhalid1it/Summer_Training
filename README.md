@@ -6,7 +6,7 @@ This is my central repository for the Smart Methods training program. This space
 
 ## About The Intern
 
-* Name: Reem Alqarni
+* Name: Reem Khalid Alqarni
 * Specialization: Information Technology
 * Program: Smart Methods Internship Program
 
