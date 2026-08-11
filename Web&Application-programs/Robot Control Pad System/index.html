@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>Control Pad</title>
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .control-pad {
+    display: grid;
+    grid-template-columns: repeat(3, 120px);
+    grid-template-rows: repeat(3, 70px);
+    gap: 20px;
+    justify-items: center;
+    align-items: center;
+    direction: ltr;
+  }
+
+  .btn {
+    width: 100%;
+    height: 100%;
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    background: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    color: #222;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+  }
+
+  .btn:hover { background: #f5f5f5; }
+  .btn.stop { border-color: red; }
+
+  .forward  { grid-column: 2; grid-row: 1; }
+  .left     { grid-column: 1; grid-row: 2; }
+  .stop     { grid-column: 2; grid-row: 2; }
+  .right    { grid-column: 3; grid-row: 2; }
+  .backward { grid-column: 2; grid-row: 3; }
+
+  #status {
+    margin-top: 25px;
+    font-size: 16px;
+    color: #444;
+  }
+</style>
+</head>
+<body>
+
+  <div class="control-pad">
+    <button class="btn forward"  onclick="sendCommand('forward')">forward</button>
+    <button class="btn left"     onclick="sendCommand('left')">left</button>
+    <button class="btn stop"     onclick="sendCommand('stop')">stop</button>
+    <button class="btn right"    onclick="sendCommand('right')">right</button>
+    <button class="btn backward" onclick="sendCommand('backward')">backward</button>
+  </div>
+
+  <div id="status">جاهز</div>
+
+  <script>
+    function sendCommand(cmd) {
+      document.getElementById('status').innerText = 'جاري الإرسال...';
+
+      const formData = new FormData();
+      formData.append('command', cmd);
+
+      fetch('update_command.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(async res => {
+        const text = await res.text();
+        try {
+          return JSON.parse(text);
+        } catch (e) {
+          throw new Error('استجابة الخادم غير متوقعة: ' + text.substring(0, 100));
+        }
+      })
+      .then(data => {
+        if (data.status === 'success') {
+          document.getElementById('status').innerText =
+            'تم تحديث الجدول: ' + data.button + ' -> "' + data.stored_as + '"';
+        } else {
+          document.getElementById('status').innerText = 'خطأ: ' + data.message;
+        }
+      })
+      .catch(err => {
+        document.getElementById('status').innerText = err.message;
+      });
+    }
+  </script>
+
+</body>
+</html>
