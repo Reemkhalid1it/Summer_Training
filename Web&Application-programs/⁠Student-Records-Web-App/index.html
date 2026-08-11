@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Records</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+  }
+  h2 {
+    color: #2c3e50;
+  }
+  form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 25px;
+    background: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  input[type="text"], input[type="number"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 140px;
+  }
+  input[type="submit"] {
+    padding: 8px 18px;
+    background: #2c7be5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  input[type="submit"]:hover {
+    background: #1a5fc4;
+  }
+  table {
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    min-width: 480px;
+  }
+  th, td {
+    padding: 10px 16px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+  }
+  th {
+    background: #2c3e50;
+    color: white;
+  }
+  .status-0 { color: #c0392b; font-weight: bold; }
+  .status-1 { color: #27ae60; font-weight: bold; }
+  button.toggle {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 4px;
+    background: #f0ad4e;
+    cursor: pointer;
+  }
+  button.toggle:hover {
+    background: #ec971f;
+  }
+  #msg {
+    margin-bottom: 10px;
+    color: #c0392b;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<h2>My page</h2>
+
+<form id="studentForm">
+  <div>
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name" placeholder="أكتب اسمك">
+  </div>
+  <div>
+    <label for="age">Age:</label><br>
+    <input type="number" id="age" name="age" placeholder="أكتب عمرك">
+  </div>
+  <input type="submit" value="Submit">
+</form>
+
+<div id="msg"></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Age</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody id="studentTableBody">
+    <!-- rows inserted by JavaScript -->
+  </tbody>
+</table>
+
+<script>
+const form = document.getElementById('studentForm');
+const tableBody = document.getElementById('studentTableBody');
+const msg = document.getElementById('msg');
+
+// Fetch all records and render the table
+async function loadStudents() {
+  try {
+    const res = await fetch('get.php');
+    const data = await res.json();
+    tableBody.innerHTML = '';
+    data.forEach(row => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${row.id}</td>
+        <td>${row.name}</td>
+        <td>${row.age}</td>
+        <td class="status-${row.status}">${row.status}</td>
+        <td><button class="toggle" data-id="${row.id}">Toggle</button></td>
+      `;
+      tableBody.appendChild(tr);
+    });
+  } catch (err) {
+    msg.textContent = 'تعذر تحميل البيانات';
+  }
+}
+
+// Handle form submit via AJAX (no page reload)
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  msg.textContent = '';
+
+  const formData = new FormData(form);
+  try {
+    const res = await fetch('insert.php', { method: 'POST', body: formData });
+    const data = await res.json();
+    if (data.success) {
+      form.reset();
+      loadStudents();
+    } else {
+      msg.textContent = data.message || 'حدث خطأ أثناء الحفظ';
+    }
+  } catch (err) {
+    msg.textContent = 'تعذر الاتصال بالخادم';
+  }
+});
+
+// Handle toggle button clicks (event delegation, works for dynamically added rows)
+tableBody.addEventListener('click', async (e) => {
+  if (!e.target.classList.contains('toggle')) return;
+
+  const id = e.target.dataset.id;
+  const formData = new FormData();
+  formData.append('id', id);
+
+  try {
+    const res = await fetch('toggle.php', { method: 'POST', body: formData });
+    const data = await res.json();
+    if (data.success) {
+      const cell = e.target.closest('tr').querySelector(`.status-0, .status-1`);
+      cell.textContent = data.status;
+      cell.className = `status-${data.status}`;
+    } else {
+      msg.textContent = data.message || 'حدث خطأ أثناء التحديث';
+    }
+  } catch (err) {
+    msg.textContent = 'تعذر الاتصال بالخادم';
+  }
+});
+
+// Load table on page load
+loadStudents();
+</script>
+
+</body>
+</html>
